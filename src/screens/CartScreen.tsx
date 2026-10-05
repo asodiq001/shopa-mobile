@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -8,10 +8,13 @@ import {
   StyleSheet,
   ActivityIndicator,
   Platform,
+  Alert,
 } from "react-native";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
 import { CartItem } from "../types";
+import { CheckoutModal } from "../components/CheckoutModal";
+import { OrderSuccessModal } from "../components/OrderSuccessModal";
 
 interface CartScreenProps {
   onGoToShop: () => void;
@@ -19,9 +22,42 @@ interface CartScreenProps {
 }
 
 export function CartScreen({ onGoToShop, onGoToAuth }: CartScreenProps) {
-  const { cart, updateQuantity, removeFromCart, clearCart, totalItems, totalAmount, isLoading } =
-    useCart();
+  const {
+    cart,
+    updateQuantity,
+    removeFromCart,
+    clearCart,
+    totalItems,
+    totalAmount,
+    isLoading,
+  } = useCart();
   const { user } = useAuth();
+
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const [isSuccessOpen, setIsSuccessOpen] = useState(false);
+  const [lastOrderDetails, setLastOrderDetails] = useState<any>(null);
+
+  const handleStartCheckout = () => {
+    if (!user) {
+      Alert.alert(
+        "Sign In Required",
+        "Please sign in to complete your purchase and save your order.",
+        [
+          { text: "Cancel", style: "cancel" },
+          { text: "Sign In", onPress: onGoToAuth },
+        ]
+      );
+      return;
+    }
+    setIsCheckoutOpen(true);
+  };
+
+  const handleOrderSuccess = async (orderNumber: string, orderDetails: any) => {
+    await clearCart();
+    setLastOrderDetails(orderDetails);
+    setIsCheckoutOpen(false);
+    setIsSuccessOpen(true);
+  };
 
   const renderCartItem = ({ item }: { item: CartItem }) => (
     <View style={styles.cartCard}>
@@ -101,15 +137,15 @@ export function CartScreen({ onGoToShop, onGoToAuth }: CartScreenProps) {
           <Text style={styles.emptyEmoji}>🛒</Text>
           <Text style={styles.emptyTitle}>Your Cart is Empty</Text>
           <Text style={styles.emptySubtitle}>
-            Add items from the store, or add them on your website and watch them
-            appear here instantly!
+            Explore our curated catalog of laptops, power banks, and tech gear to
+            start filling your cart.
           </Text>
           <TouchableOpacity
             style={styles.browseButton}
             onPress={onGoToShop}
             activeOpacity={0.8}
           >
-            <Text style={styles.browseButtonText}>Explore Products</Text>
+            <Text style={styles.browseButtonText}>Browse Products</Text>
           </TouchableOpacity>
         </View>
       ) : (
@@ -144,15 +180,47 @@ export function CartScreen({ onGoToShop, onGoToAuth }: CartScreenProps) {
 
               <TouchableOpacity
                 style={styles.checkoutButton}
-                onPress={onGoToShop}
+                onPress={handleStartCheckout}
                 activeOpacity={0.8}
               >
-                <Text style={styles.checkoutButtonText}>Continue Shopping</Text>
+                <Text style={styles.checkoutButtonText}>
+                  Proceed to Checkout ➔
+                </Text>
               </TouchableOpacity>
             </View>
+
+            <TouchableOpacity
+              style={styles.continueShoppingLink}
+              onPress={onGoToShop}
+              activeOpacity={0.7}
+            >
+              <Text style={styles.continueShoppingText}>
+                ← Continue Shopping
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
       )}
+
+      {/* Checkout Modal */}
+      <CheckoutModal
+        visible={isCheckoutOpen}
+        onClose={() => setIsCheckoutOpen(false)}
+        cart={cart}
+        totalAmount={totalAmount}
+        user={user}
+        onOrderSuccess={handleOrderSuccess}
+      />
+
+      {/* Order Success Modal */}
+      <OrderSuccessModal
+        visible={isSuccessOpen}
+        onClose={() => {
+          setIsSuccessOpen(false);
+          onGoToShop();
+        }}
+        orderDetails={lastOrderDetails}
+      />
     </View>
   );
 }
@@ -251,31 +319,44 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     backgroundColor: "#FFFFFF",
     borderRadius: 14,
-    padding: 10,
-    borderWidth: 1,
-    borderColor: "#E2E8F0",
-    gap: 12,
+    padding: 12,
     alignItems: "center",
+    gap: 12,
+    borderWidth: 1,
+    borderColor: "#EDF2F7",
+    ...Platform.select({
+      ios: {
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.05,
+        shadowRadius: 3,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
   },
   cartImage: {
-    width: 70,
-    height: 70,
+    width: 76,
+    height: 76,
     borderRadius: 10,
-    backgroundColor: "#EDF2F7",
+    backgroundColor: "#F7FAFC",
   },
   itemInfo: {
     flex: 1,
+    justifyContent: "space-between",
   },
   itemName: {
-    fontSize: 12,
-    fontWeight: "bold",
+    fontSize: 13,
+    fontWeight: "700",
     color: "#282828",
+    lineHeight: 18,
   },
   itemPrice: {
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: "900",
     color: "#F68B1E",
-    marginTop: 2,
+    marginTop: 3,
   },
   controlsRow: {
     flexDirection: "row",
@@ -289,22 +370,24 @@ const styles = StyleSheet.create({
     backgroundColor: "#F7FAFC",
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: "#CBD5E0",
+    borderColor: "#E2E8F0",
   },
   qtyButton: {
-    paddingHorizontal: 10,
-    paddingVertical: 4,
+    width: 30,
+    height: 30,
+    alignItems: "center",
+    justifyContent: "center",
   },
   qtyButtonText: {
-    fontSize: 14,
-    fontWeight: "bold",
-    color: "#282828",
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#4A5568",
   },
   qtyText: {
-    fontSize: 12,
-    fontWeight: "bold",
+    fontSize: 13,
+    fontWeight: "700",
     color: "#282828",
-    paddingHorizontal: 8,
+    paddingHorizontal: 10,
   },
   deleteButton: {
     padding: 6,
@@ -316,9 +399,11 @@ const styles = StyleSheet.create({
   },
   summaryFooter: {
     backgroundColor: "#FFFFFF",
-    padding: 16,
+    paddingHorizontal: 16,
+    paddingTop: 14,
+    paddingBottom: Platform.OS === "ios" ? 30 : 16,
     borderTopWidth: 1,
-    borderTopColor: "#E2E8F0",
+    borderTopColor: "#EDF2F7",
     ...Platform.select({
       ios: {
         shadowColor: "#000",
@@ -378,5 +463,14 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: "bold",
   },
+  continueShoppingLink: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingTop: 10,
+  },
+  continueShoppingText: {
+    color: "#718096",
+    fontSize: 12,
+    fontWeight: "700",
+  },
 });
-
