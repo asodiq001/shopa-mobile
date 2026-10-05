@@ -179,25 +179,23 @@ export function CartScreen({ onGoToShop, onGoToAuth }: CartScreenProps) {
               </TouchableOpacity>
 
               <TouchableOpacity
+                style={styles.continueShoppingButton}
+                onPress={onGoToShop}
+                activeOpacity={0.7}
+              >
+                <Text style={styles.continueShoppingButtonText}>Shop More</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
                 style={styles.checkoutButton}
                 onPress={handleStartCheckout}
                 activeOpacity={0.8}
               >
                 <Text style={styles.checkoutButtonText}>
-                  Proceed to Checkout ➔
+                  Checkout ➔
                 </Text>
               </TouchableOpacity>
             </View>
-
-            <TouchableOpacity
-              style={styles.continueShoppingLink}
-              onPress={onGoToShop}
-              activeOpacity={0.7}
-            >
-              <Text style={styles.continueShoppingText}>
-                ← Continue Shopping
-              </Text>
-            </TouchableOpacity>
           </View>
         </View>
       )}
@@ -434,19 +432,35 @@ const styles = StyleSheet.create({
   },
   buttonRow: {
     flexDirection: "row",
-    gap: 10,
+    gap: 8,
   },
   clearButton: {
     paddingVertical: 12,
-    paddingHorizontal: 16,
+    paddingHorizontal: 12,
     borderRadius: 10,
     borderWidth: 1,
     borderColor: "#E2E8F0",
+    backgroundColor: "#FFFFFF",
     alignItems: "center",
     justifyContent: "center",
   },
   clearButtonText: {
     color: "#E53E3E",
+    fontSize: 12,
+    fontWeight: "bold",
+  },
+  continueShoppingButton: {
+    paddingVertical: 12,
+    paddingHorizontal: 12,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#E2E8F0",
+    backgroundColor: "#FFFFFF",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  continueShoppingButtonText: {
+    color: "#4A5568",
     fontSize: 12,
     fontWeight: "bold",
   },
@@ -457,20 +471,15 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: "center",
     justifyContent: "center",
+    shadowColor: "#F68B1E",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 3,
   },
   checkoutButtonText: {
     color: "#FFFFFF",
     fontSize: 13,
     fontWeight: "bold",
-  },
-  continueShoppingLink: {
-    alignItems: "center",
-    justifyContent: "center",
-    paddingTop: 10,
-  },
-  continueShoppingText: {
-    color: "#718096",
-    fontSize: 12,
-    fontWeight: "700",
   },
 });

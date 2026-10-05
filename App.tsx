@@ -19,7 +19,7 @@ import { AccountScreen } from "./src/screens/AccountScreen";
 
 function MainApp() {
   const [activeScreen, setActiveScreen] = useState<"shop" | "cart" | "auth">(
-    "shop"
+    "shop",
   );
   const { totalItems } = useCart();
   const { user } = useAuth();
@@ -57,7 +57,10 @@ function MainApp() {
       {/* Bottom Navigation Bar */}
       <View style={styles.bottomNav}>
         <TouchableOpacity
-          style={[styles.navItem, activeScreen === "shop" && styles.activeNavItem]}
+          style={[
+            styles.navItem,
+            activeScreen === "shop" && styles.activeNavItem,
+          ]}
           onPress={() => setActiveScreen("shop")}
           activeOpacity={0.7}
         >
@@ -73,7 +76,10 @@ function MainApp() {
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[styles.navItem, activeScreen === "cart" && styles.activeNavItem]}
+          style={[
+            styles.navItem,
+            activeScreen === "cart" && styles.activeNavItem,
+          ]}
           onPress={() => setActiveScreen("cart")}
           activeOpacity={0.7}
         >
@@ -96,7 +102,10 @@ function MainApp() {
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[styles.navItem, activeScreen === "auth" && styles.activeNavItem]}
+          style={[
+            styles.navItem,
+            activeScreen === "auth" && styles.activeNavItem,
+          ]}
           onPress={() => setActiveScreen("auth")}
           activeOpacity={0.7}
         >
