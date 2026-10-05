@@ -51,7 +51,9 @@ export function OrderSuccessModal({
 
           {/* Order Badge */}
           <View style={styles.orderBadge}>
-            <Text style={styles.orderBadgeText}>{orderDetails.orderNumber}</Text>
+            <Text style={styles.orderBadgeText}>
+              {orderDetails.orderNumber}
+            </Text>
           </View>
 
           {/* Details Box */}

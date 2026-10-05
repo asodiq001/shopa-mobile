@@ -22,3 +22,22 @@ export interface UserProfile {
   email: string;
 }
 
+export interface Order {
+  id: string;
+  orderNumber: string;
+  createdAt: string;
+  totalAmount: number;
+  status: string;
+  customerName: string;
+  customerEmail: string;
+  customerPhone: string;
+  deliveryState: string;
+  deliveryAddress: string;
+  items: {
+    id: string;
+    productName: string;
+    unitPrice: number;
+    quantity: number;
+    image?: string;
+  }[];
+}

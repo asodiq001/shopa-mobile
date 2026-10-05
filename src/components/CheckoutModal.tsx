@@ -166,7 +166,7 @@ export function CheckoutModal({
     } catch (err: any) {
       Alert.alert(
         "Order Failed",
-        err.message || "Could not place order. Please try again."
+        err.message || "Could not place order. Please try again.",
       );
     } finally {
       setIsSubmitting(false);
