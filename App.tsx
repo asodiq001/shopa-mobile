@@ -15,6 +15,7 @@ import { Header } from "./src/components/Header";
 import { ShopScreen } from "./src/screens/ShopScreen";
 import { CartScreen } from "./src/screens/CartScreen";
 import { AuthScreen } from "./src/screens/AuthScreen";
+import { AccountScreen } from "./src/screens/AccountScreen";
 
 function MainApp() {
   const [activeScreen, setActiveScreen] = useState<"shop" | "cart" | "auth">(
@@ -39,12 +40,18 @@ function MainApp() {
             onGoToAuth={() => setActiveScreen("auth")}
           />
         )}
-        {activeScreen === "auth" && (
-          <AuthScreen
-            onSuccess={() => setActiveScreen("shop")}
-            onCancel={() => setActiveScreen("shop")}
-          />
-        )}
+        {activeScreen === "auth" &&
+          (user ? (
+            <AccountScreen
+              onGoToShop={() => setActiveScreen("shop")}
+              onGoToCart={() => setActiveScreen("cart")}
+            />
+          ) : (
+            <AuthScreen
+              onSuccess={() => setActiveScreen("shop")}
+              onCancel={() => setActiveScreen("shop")}
+            />
+          ))}
       </View>
 
       {/* Bottom Navigation Bar */}

@@ -39,7 +39,7 @@ export function Header({ activeScreen, onNavigate }: HeaderProps) {
         {user ? (
           <TouchableOpacity
             style={styles.userButton}
-            onPress={signOut}
+            onPress={() => onNavigate("auth")}
             activeOpacity={0.7}
           >
             <View style={styles.userAvatar}>
@@ -51,7 +51,7 @@ export function Header({ activeScreen, onNavigate }: HeaderProps) {
               <Text style={styles.userName} numberOfLines={1}>
                 {user.name.split(" ")[0]}
               </Text>
-              <Text style={styles.signOutText}>Sign Out</Text>
+              <Text style={styles.signOutText}>Account</Text>
             </View>
           </TouchableOpacity>
         ) : (
