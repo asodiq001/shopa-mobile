@@ -75,7 +75,7 @@ export function AuthScreen({ onSuccess, onCancel }: AuthScreenProps) {
           setErrorMessage(error);
         } else {
           setSuccessMessage(
-            message || "Account created successfully! You can now sign in."
+            message || "Account created successfully! You can now sign in.",
           );
           if (!message) {
             onSuccess();

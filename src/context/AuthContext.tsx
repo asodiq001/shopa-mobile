@@ -9,7 +9,7 @@ interface AuthContextType {
   signUp: (
     fullName: string,
     email: string,
-    password: string
+    password: string,
   ) => Promise<{ error?: string; message?: string }>;
   signOut: () => Promise<void>;
 }
@@ -85,11 +85,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const signUp = async (
-    fullName: string,
-    email: string,
-    password: string
-  ) => {
+  const signUp = async (fullName: string, email: string, password: string) => {
     try {
       const { data, error } = await supabase.auth.signUp({
         email: email.trim(),

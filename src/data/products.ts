@@ -282,3 +282,4 @@ export const products: Product[] = [
     inStock: true,
   },
 ];
+
